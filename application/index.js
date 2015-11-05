@@ -9,19 +9,38 @@ var socket = net.connect({ port : 3000}, function() {
     // line listener
     command.on('line', inputCallback);
 
-    function inputCallback(line) {
-        writeToSocket(line);
+    // socket listner
+    socket.on('data', function(data) {
+        process.stdout.write(data);
         command.prompt(true);
+    });
+
+    function inputCallback(line) {
+        inputHandler(line, function() {
+            writeToSocket(line);
+            command.prompt(true);
+        });
+    };
+
+    function inputHandler(cmd, defaultHandler) {
+        switch (cmd) {
+            case "/quit" :
+                return quitHandler();
+            default :
+                return defaultHandler();
+        };
+    };
+
+    function quitHandler() {
+        socket.end();
+        process.exit();
     };
 });
 
-
 function writeToSocket(msg) {
-    msg += '\n';
     if (!socket.write(msg)) {
         process.stdout.write("Something is wrong with the connetion. Can't write to socket. Message: ", msg);
     };
 };
-
 
 
