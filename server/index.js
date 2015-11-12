@@ -20,6 +20,17 @@ command.setCommandHandler('/list', function(socket) {
     }
 });
 
+command.setCommandHandler('/kick', function(socket, target) {
+    console.log("Deleting user with name " + target);
+    for(u in users) {
+        console.log(users[u].name + " - " + target);
+        if (users[u].name == target) {
+            users[u].end("You have been terminated by user " + socket.name);
+
+        }
+    }
+})
+
 var server = net.createServer(function (conn) {
     users.push(conn);
     console.log("Connection establised with new client [" + conn.remoteAddress + "]");

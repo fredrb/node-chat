@@ -15,6 +15,12 @@ var socket = net.connect({ port : 3000}, function() {
         command.prompt(true);
     });
 
+    socket.on('error', function(data) {
+        if (data)
+            console.log(data);
+        process.exit();
+    })
+
     function inputCallback(line) {
         writeToSocket(line);
         command.prompt(true);
@@ -32,7 +38,7 @@ var socket = net.connect({ port : 3000}, function() {
         };
     };
 
-    function quitHandler() {
+    function quitHandler(data) {
         socket.end();
         process.exit();
     };
