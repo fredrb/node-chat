@@ -1,55 +1,38 @@
-var net = require('net');
-var rl  = require('readline');
+var rl = require('readline');
+const DEFAULT_SERVER = '127.0.0.1';
+const DEFAULT_PORT = '3001';
 
-var socket = net.connect({ port : 3000}, function() {
-    var command = rl.createInterface(process.stdin, process.stdout);
-    command.prompt(true);
+var app = require('./application.js');
 
-    // line listener
-    command.on('line', inputCallback);
+var command = rl.createInterface(process.stdin, process.stdout);
+var server = process.argv[2] || DEFAULT_SERVER;
+//var name   = process.argb[3] || null;
+var name = null;
 
-    // socket listner
-    socket.on('data', function(data) {
-        console.log(data.toString('utf8'));
-        // process.stdout.write(data);
-        command.prompt(true);
-    });
+console.log("Application started");
 
-    socket.on('error', function(data) {
-        if (data)
-            console.log(data);
-        process.exit();
-    })
+function checkServer() {
+    if(server === DEFAULT_SERVER) {
+        command.question("Default server set to (" + DEFAULT_SERVER + ") leave it blank to keep it", 
+        function(answer) {
+            server = answer || DEFAULT_SERVER;
+            checkUsername();
+        });
+    }
+}
 
-    function inputCallback(line) {
-        writeToSocket(line);
-        command.prompt(true);
-    };
+function checkUsername() {
+    if(name === null ) {
+        command.question("Please enter a name: ", function(answer) {
+            name = answer || "DummyBot123";    
+            app(server, DEFAULT_PORT, name, command);
+        });
+    }
+}
 
-    function inputHandler(cmd, defaultHandler) {
-        var param = cmd.split(" ");
-        switch (param[0]) {
-            case "/quit" :
-                return quitHandler();
-            case "/nick" :
-                return newNickHanlder(param);
-            default :
-                return defaultHandler();
-        };
-    };
+checkServer();
 
-    function quitHandler(data) {
-        socket.end();
-        process.exit();
-    };
 
-    function newNickHandler(nick) {
 
-    };
 
-    function writeToSocket(msg) {
-        if (!socket.write(msg)) {
-            process.stdout.write("Something is wrong with the connetion. Can't write to socket. Message: ", msg);
-        };
-    };
-});
+

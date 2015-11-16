@@ -38,7 +38,7 @@ var server = net.createServer(function (conn) {
     if (!conn.name) {
         conn.name = "<" + conn.remoteAddress + ":" + conn.remotePort + ">";
         conn.write("[SERVER]: Use /nick <username> to change your name.\n");
-        conn.write("[SERVER]: Current name is : " + conn.name);
+          conn.write("[SERVER]: Current name is : " + conn.name);
     }
 
     conn.on('data', function(data) {
@@ -58,15 +58,19 @@ var server = net.createServer(function (conn) {
     });
 
     function broadcast(msg) {
-        process.stdout.write(conn.name + " " + msg + "\n");
+        console.log(beautifyMessage(conn.name, msg));
         users.forEach(function(u) {
             if(u !== conn) {
-                u.write(conn.name + ": " +  msg);
+                u.write(beautifyMessage(conn.name,msg));
             };
         });
     };
+
+    function beautifyMessage(user, text) {
+        return user + ": " + text;
+    }
 });
 
-server.listen(3000, function() {
-    console.log("Server started on port 3000");
+server.listen(3001, function() {
+    console.log("Server started on port 3001");
 });
