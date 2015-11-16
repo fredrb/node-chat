@@ -25,6 +25,7 @@ function checkUsername() {
     if(name === null ) {
         command.question("Please enter a name: ", function(answer) {
             name = answer || "DummyBot123";    
+            command.close();
             app(server, DEFAULT_PORT, name, command);
         });
     }

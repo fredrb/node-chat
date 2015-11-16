@@ -1,14 +1,17 @@
 var net = require('net');
 var rl = require('readline');
 
-module.exports = function(host, port, name, command) {
+module.exports = function(host, port, name) {
     var client = net.connect(port, host, function() {
+        var command = rl.createInterface(process.stdin, process.stdout);
+
         // update username
         client.write("/nick " + name);      
         command.prompt(true);                            
 
         command.on('line', function(line) {
-            sendMsg(line);          
+            //sendMsg(line);          
+            client.write(line);
             command.prompt(true);
         });
 
