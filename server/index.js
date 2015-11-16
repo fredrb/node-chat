@@ -37,8 +37,6 @@ var server = net.createServer(function (conn) {
 
     if (!conn.name) {
         conn.name = "<" + conn.remoteAddress + ":" + conn.remotePort + ">";
-        conn.write("[SERVER]: Use /nick <username> to change your name.\n");
-          conn.write("[SERVER]: Current name is : " + conn.name);
     }
 
     conn.on('data', function(data) {

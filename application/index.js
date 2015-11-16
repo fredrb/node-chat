@@ -13,7 +13,7 @@ console.log("Application started");
 
 function checkServer() {
     if(server === DEFAULT_SERVER) {
-        command.question("Default server set to (" + DEFAULT_SERVER + ") leave it blank to keep it", 
+        command.question("Default server set to (" + DEFAULT_SERVER + ") leave it blank to keep it: ", 
         function(answer) {
             server = answer || DEFAULT_SERVER;
             checkUsername();
